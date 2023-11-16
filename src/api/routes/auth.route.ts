@@ -1,11 +1,10 @@
 import type { Request, Response } from 'express';
 import { Router } from 'express';
-import { AuthService } from '../services/auth.service.js';
+import { signUp, signIn, signOut, refresh } from '../services/auth.service.js';
 import { registerValidator } from '../validations/register.js';
 import { validationResult } from 'express-validator';
 
 const authRouter = Router();
-const authService = new AuthService();
 
 authRouter.post(
   '/signup',
@@ -17,8 +16,8 @@ authRouter.post(
     }
     try {
       const { username, email, password } = req.body;
-      const user = await authService.signUp(username, email, password);
-      return res.json(user);
+      const { status, message } = await signUp(username, email, password);
+      return res.status(status).json({ message });
     } catch (err: any) {
       return res.status(500).json({ message: err.message });
     }
@@ -33,8 +32,11 @@ authRouter.post('/signin', async (req: Request, res: Response) => {
         .status(400)
         .json({ message: 'Please provide username and password' });
     }
-    const user = await authService.signIn(username, password);
-    return res.json(user);
+    const { status, token, accessToken, message, role } = await signIn(
+      username,
+      password,
+    );
+    return res.status(status).json({ token, accessToken, message, role });
   } catch (err: any) {
     return res.status(500).json({ message: err.message });
   }
@@ -42,28 +44,25 @@ authRouter.post('/signin', async (req: Request, res: Response) => {
 
 authRouter.post('/signout', async (req: Request, res: Response) => {
   try {
-    const { refreshToken } = req.body;
-    if (!refreshToken) {
+    const { token } = req.body;
+    if (!token) {
       return res.sendStatus(400);
     }
-    const token = await authService.signOut(refreshToken);
-    if (token) {
-      return res.status(400).json(token);
-    }
-    return res.sendStatus(204);
+    const { status, message } = await signOut(token);
+    return res.status(status).json({ message });
   } catch (err: any) {
     return res.status(500).json({ message: err.message });
   }
 });
 
-authRouter.post('/refresh-token', async (req: Request, res: Response) => {
+authRouter.post('/refresh', async (req: Request, res: Response) => {
   try {
     const { refreshToken } = req.body;
     if (!refreshToken) {
       return res.sendStatus(400);
     }
-    const user = await authService.refreshToken(refreshToken);
-    return res.json(user);
+    const { status, token, message } = await refresh(refreshToken);
+    return res.status(status).json({ token, message });
   } catch (err: any) {
     return res.status(500).json({ message: err.message });
   }
