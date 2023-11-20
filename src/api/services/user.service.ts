@@ -10,6 +10,8 @@ export async function getUser(username: string) {
         avatarUrl: 1,
         bannerUrl: 1,
         bio: 1,
+        twitterLink: 1,
+        githubLink: 1,
       },
     );
     if (!user) return { status: 404, message: 'User not found' };
