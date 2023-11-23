@@ -1,23 +1,42 @@
 {
   "compilerOptions": {
-    "moduleResolution": "bundler",
-    "module": "ESNext",
-    "target": "ESNext",
-    "strict": true,
-    "noImplicitOverride": false,
-    "useUnknownInCatchVariables": true,
-    "noFallthroughCasesInSwitch": true,
+    // Target and module settings
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "Node",
+    "lib": ["ES2022", "DOM"],
+
+    // Paths and directories
+    "baseUrl": "./",
+    "rootDir": "src",
+    "outDir": "dist",
+
+    // Language features
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+
+    // Strict type checking
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true,
+
+    // Additional checks
+    "alwaysStrict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
-    "verbatimModuleSyntax": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "rootDir": "src",
-    "outDir": "dist"
+    "noImplicitOverride": true,
+
+    // Performance optimizations
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*.ts"
@@ -26,7 +45,4 @@
     "node_modules",
     "dist"
   ],
-  "ts-node": {
-    "esm": true
-  }
 }
